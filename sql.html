@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spark SQL patterns · Matthew Rudisill</title>
+  <meta name="description" content="Spark SQL patterns with worked examples: top N per group, removing duplicates, Delta MERGE upserts and filling date gaps.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="site-name" href="./">Matthew Rudisill</a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="./#projects">Projects</a>
+        <a href="sql.html" aria-current="page">Spark SQL</a>
+        <a href="dax.html">DAX</a>
+        <a href="./#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="page-head">
+      <p class="kicker">Patterns</p>
+      <h1>Spark SQL</h1>
+      <p class="lede">Queries I reach for in Databricks, each with a small made-up table and the exact result.</p>
+      <ul class="toc">
+        <li><a href="#top-n">Top N per group</a></li>
+        <li><a href="#dedupe">Removing duplicates</a></li>
+        <li><a href="#merge">Upserts with Delta MERGE</a></li>
+        <li><a href="#date-gaps">Filling date gaps</a></li>
+      </ul>
+    </section>
+
+    <section class="pattern" id="top-n">
+      <h2>Top N per group</h2>
+      <p>The top two customers by revenue in each region. A window function numbers the rows inside each region, and the outer query keeps the first N.</p>
+      <div class="pair">
+        <div class="table-wrap">
+          <table>
+            <caption>sales</caption>
+            <thead><tr><th>region</th><th>customer</th><th class="n">revenue</th></tr></thead>
+            <tbody>
+              <tr><td>East</td><td>Acme</td><td class="n">900</td></tr>
+              <tr><td>East</td><td>Birch</td><td class="n">650</td></tr>
+              <tr><td>East</td><td>Cobalt</td><td class="n">650</td></tr>
+              <tr><td>East</td><td>Dune</td><td class="n">300</td></tr>
+              <tr><td>West</td><td>Ember</td><td class="n">1200</td></tr>
+              <tr><td>West</td><td>Fjord</td><td class="n">480</td></tr>
+              <tr><td>West</td><td>Grove</td><td class="n">220</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code>WITH ranked AS (
+  SELECT
+    region,
+    customer,
+    revenue,
+    ROW_NUMBER() OVER (
+      PARTITION BY region
+      ORDER BY revenue DESC, customer
+    ) AS rn
+  FROM sales
+)
+SELECT region, customer, revenue
+FROM ranked
+WHERE rn &lt;= 2</code></pre>
+      </div>
+      <h3>Result</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>region</th><th>customer</th><th class="n">revenue</th></tr></thead>
+          <tbody>
+            <tr><td>East</td><td>Acme</td><td class="n">900</td></tr>
+            <tr><td>East</td><td>Birch</td><td class="n">650</td></tr>
+            <tr><td>West</td><td>Ember</td><td class="n">1200</td></tr>
+            <tr><td>West</td><td>Fjord</td><td class="n">480</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note"><strong>Ties:</strong> Birch and Cobalt both have 650. <code>ROW_NUMBER</code> always returns exactly N rows, so the tiebreaker (<code>customer</code>) decides who makes it. To keep every tied row, use <code>RANK()</code> instead: East would return Acme, Birch and Cobalt. Without a tiebreaker, <code>ROW_NUMBER</code> can pick a different row on each run.</p>
+    </section>
+
+    <section class="pattern" id="dedupe">
+      <h2>Removing duplicates</h2>
+      <p>Keep one row per customer: the most recently updated. Same window-function idea, numbered newest first, keeping row 1.</p>
+      <div class="pair">
+        <div class="table-wrap">
+          <table>
+            <caption>customer_raw</caption>
+            <thead><tr><th class="n">customer_id</th><th>email</th><th>updated_at</th></tr></thead>
+            <tbody>
+              <tr><td class="n">1</td><td>ana@old.com</td><td>2026-01-04</td></tr>
+              <tr><td class="n">1</td><td>ana@new.com</td><td>2026-02-10</td></tr>
+              <tr><td class="n">2</td><td>ben@mail.com</td><td>2026-01-15</td></tr>
+              <tr><td class="n">3</td><td>cy@mail.com</td><td>2026-01-20</td></tr>
+              <tr><td class="n">3</td><td>cy@mail.com</td><td>2026-01-20</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code>WITH ranked AS (
+  SELECT
+    customer_id,
+    email,
+    updated_at,
+    ROW_NUMBER() OVER (
+      PARTITION BY customer_id
+      ORDER BY updated_at DESC
+    ) AS rn
+  FROM customer_raw
+)
+SELECT customer_id, email, updated_at
+FROM ranked
+WHERE rn = 1</code></pre>
+      </div>
+      <h3>Result</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th class="n">customer_id</th><th>email</th><th>updated_at</th></tr></thead>
+          <tbody>
+            <tr><td class="n">1</td><td>ana@new.com</td><td>2026-02-10</td></tr>
+            <tr><td class="n">2</td><td>ben@mail.com</td><td>2026-01-15</td></tr>
+            <tr><td class="n">3</td><td>cy@mail.com</td><td>2026-01-20</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note"><strong>Why not DISTINCT:</strong> <code>SELECT DISTINCT</code> only removes rows that match in every column. It drops customer 3's exact copy but keeps both of customer 1's rows, because the emails differ. Databricks also accepts <code>QUALIFY ROW_NUMBER() OVER (...) = 1</code> as a shorter way to write the same filter.</p>
+    </section>
+
+    <section class="pattern" id="merge">
+      <h2>Upserts with Delta MERGE</h2>
+      <p>Apply a batch of changes to a Delta table in one statement: update customers that exist, insert the ones that don't.</p>
+      <div class="pair">
+        <div class="table-wrap">
+          <table>
+            <caption>customers (target)</caption>
+            <thead><tr><th class="n">customer_id</th><th>email</th><th>updated_at</th></tr></thead>
+            <tbody>
+              <tr><td class="n">1</td><td>ana@old.com</td><td>2026-01-04</td></tr>
+              <tr><td class="n">2</td><td>ben@mail.com</td><td>2026-01-15</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <caption>customer_updates (source)</caption>
+            <thead><tr><th class="n">customer_id</th><th>email</th><th>updated_at</th></tr></thead>
+            <tbody>
+              <tr><td class="n">1</td><td>ana@new.com</td><td>2026-02-10</td></tr>
+              <tr><td class="n">3</td><td>cy@mail.com</td><td>2026-01-20</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <pre><code>MERGE INTO customers AS t
+USING customer_updates AS s
+  ON t.customer_id = s.customer_id
+WHEN MATCHED THEN
+  UPDATE SET
+    t.email = s.email,
+    t.updated_at = s.updated_at
+WHEN NOT MATCHED THEN
+  INSERT (customer_id, email, updated_at)
+  VALUES (s.customer_id, s.email, s.updated_at)</code></pre>
+      <h3>customers after the merge</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th class="n">customer_id</th><th>email</th><th>updated_at</th></tr></thead>
+          <tbody>
+            <tr><td class="n">1</td><td>ana@new.com</td><td>2026-02-10</td></tr>
+            <tr><td class="n">2</td><td>ben@mail.com</td><td>2026-01-15</td></tr>
+            <tr><td class="n">3</td><td>cy@mail.com</td><td>2026-01-20</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note"><strong>One source row per key:</strong> if two source rows match the same target row, the merge fails instead of guessing which one wins. Deduplicate the source first with the <a href="#dedupe">pattern above</a>. When the columns line up, <code>UPDATE SET *</code> and <code>INSERT *</code> save listing them.</p>
+    </section>
+
+    <section class="pattern" id="date-gaps">
+      <h2>Filling date gaps</h2>
+      <p>Daily totals with a row for every day, including days with no orders. Build a calendar of dates, then left join the data onto it.</p>
+      <div class="pair">
+        <div class="table-wrap">
+          <table>
+            <caption>orders</caption>
+            <thead><tr><th>order_date</th><th class="n">amount</th></tr></thead>
+            <tbody>
+              <tr><td>2026-03-01</td><td class="n">120</td></tr>
+              <tr><td>2026-03-01</td><td class="n">80</td></tr>
+              <tr><td>2026-03-02</td><td class="n">45</td></tr>
+              <tr><td>2026-03-04</td><td class="n">210</td></tr>
+              <tr><td>2026-03-06</td><td class="n">60</td></tr>
+              <tr><td>2026-03-06</td><td class="n">15</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code>WITH days AS (
+  SELECT explode(sequence(
+    DATE'2026-03-01',
+    DATE'2026-03-07',
+    INTERVAL 1 DAY
+  )) AS day
+),
+daily AS (
+  SELECT order_date AS day, SUM(amount) AS amount
+  FROM orders
+  GROUP BY order_date
+)
+SELECT d.day, COALESCE(a.amount, 0) AS amount
+FROM days AS d
+LEFT JOIN daily AS a
+  ON a.day = d.day
+ORDER BY d.day</code></pre>
+      </div>
+      <h3>Result</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>day</th><th class="n">amount</th></tr></thead>
+          <tbody>
+            <tr><td>2026-03-01</td><td class="n">200</td></tr>
+            <tr><td>2026-03-02</td><td class="n">45</td></tr>
+            <tr><td>2026-03-03</td><td class="n">0</td></tr>
+            <tr><td>2026-03-04</td><td class="n">210</td></tr>
+            <tr><td>2026-03-05</td><td class="n">0</td></tr>
+            <tr><td>2026-03-06</td><td class="n">75</td></tr>
+            <tr><td>2026-03-07</td><td class="n">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note"><strong>Keep the COALESCE:</strong> without it, empty days come back as <code>NULL</code>, and an average over the result skips them instead of counting them as zero. Here the daily average is 530 ÷ 7 = 75.7 with zeros, but 530 ÷ 4 = 132.5 with nulls.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">Examples use made-up data. <a href="./">Back to home</a></div>
+  </footer>
+</body>
+</html>
