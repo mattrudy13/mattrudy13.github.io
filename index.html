@@ -4,133 +4,141 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Matthew Rudisill · Data analyst</title>
-  <meta name="description" content="Matthew Rudisill, data analyst. Projects in sports modeling, dashboards and scraping, plus Spark SQL and DAX patterns.">
+  <meta name="description" content="Matthew Rudisill, data analyst in banking. Spark SQL, Python, Power BI, Databricks and Delta Lake, plus forecasting and data projects built on public data.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Source+Sans+3:wght@400;600&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrap">
-      <a class="site-name" href="./">Matthew Rudisill</a>
-      <nav class="site-nav" aria-label="Main">
-        <a href="#projects">Projects</a>
-        <a href="#patterns">SQL &amp; DAX</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <section class="intro">
-      <p class="kicker">Data analyst</p>
+  <div class="wrap">
+    <header class="masthead" id="top">
+      <p class="label">Data analyst · Banking</p>
       <h1>Matthew Rudisill</h1>
-      <p class="lede">Data analyst at a bank, working in Databricks, Spark SQL, Delta Lake and Power BI. On the side I build small data products: sports models tested against real betting lines, live dashboards, and scrapers that run on a schedule.</p>
-      <ul class="chips" aria-label="Tools">
-        <li>Databricks</li>
-        <li>Spark SQL</li>
-        <li>Delta Lake</li>
-        <li>Power BI / DAX</li>
-        <li>Python</li>
-        <li>JavaScript</li>
-      </ul>
-    </section>
+      <p class="lede">Data analyst at a bank, building customer data applications and conversion reporting in Databricks and Power BI. Outside work I build forecasting and tracking projects on public data.</p>
+      <p class="skills"><strong>Skills</strong> Spark SQL · Python · Power BI / DAX · Databricks · Delta Lake · JavaScript · GitHub Actions</p>
+      <nav class="bar-nav" aria-label="Main">
+        <div class="sections">
+          <a href="#work">At work</a>
+          <a href="#featured">Projects</a>
+        </div>
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/matthew-rudisill/">LinkedIn</a>
+          <a href="mailto:mattbrudisill@gmail.com">Email</a>
+          <a href="https://github.com/mattrudy13">GitHub</a>
+        </div>
+      </nav>
+    </header>
 
-    <section class="section" id="projects">
-      <div class="section-head">
-        <h2>Projects</h2>
-        <span>4 live sites · code on GitHub</span>
-      </div>
-
-      <article class="project">
-        <div class="meta">
-          <h3>cfb-picks</h3>
-          <p class="tags">Modeling · backtesting · GitHub Actions</p>
-          <div class="links"><a href="https://mattrudy13.github.io/cfb-picks/">Live site</a><a href="https://github.com/mattrudy13/cfb-picks">Code</a></div>
+    <main>
+      <section class="work" id="work">
+        <div class="work-head">
+          <p class="label accent">At work</p>
+          <h2>Data analyst, banking</h2>
+          <p class="stack">Since November 2025</p>
         </div>
-        <div class="about">
-          <p>A college football spread model, tested the way it would have been bet. Two versions missed a pass/fail bar written before the test; the third passed narrowly, so its picks stay provisional until the live record backs it up.</p>
-          <p class="fact">v3: 55.3% at the opening line on 172 picks, 2022–2025</p>
-        </div>
-      </article>
-
-      <article class="project">
-        <div class="meta">
-          <h3>te-tracker</h3>
-          <p class="tags">Probability models · odds data</p>
-          <div class="links"><a href="https://mattrudy13.github.io/te-tracker/">Live site</a><a href="https://github.com/mattrudy13/te-tracker">Code</a></div>
-        </div>
-        <div class="about">
-          <p>NFL tight end usage and touchdown odds, updated through the season. Compares a model's touchdown chances with sportsbook prices to find value.</p>
-        </div>
-      </article>
-
-      <article class="project">
-        <div class="meta">
-          <h3>h2h</h3>
-          <p class="tags">APIs · data joins · static site</p>
-          <div class="links"><a href="https://mattrudy13.github.io/h2h/">Live site</a><a href="https://github.com/mattrudy13/h2h">Code</a></div>
-        </div>
-        <div class="about">
-          <p>All-time head-to-head records between any two college teams, in football and men's basketball, with every game in the series.</p>
-        </div>
-      </article>
-
-      <article class="project">
-        <div class="meta">
-          <h3>apartments</h3>
-          <p class="tags">Scraping · scheduled jobs · dashboard</p>
-          <div class="links"><a href="https://mattrudy13.github.io/apartments/">Live site</a><a href="https://github.com/mattrudy13/apartments">Code</a></div>
-        </div>
-        <div class="about">
-          <p>A weekly job scrapes apartment complexes' sites for availability and pricing, and a dashboard shows which units fit a set of rules.</p>
-        </div>
-      </article>
-    </section>
-
-    <section class="section" id="patterns">
-      <div class="section-head">
-        <h2>Spark SQL &amp; DAX patterns</h2>
-        <span>Worked examples on made-up data</span>
-      </div>
-      <div class="pattern-lists">
-        <div class="pattern-list">
-          <h3><a href="sql.html">Spark SQL</a></h3>
+        <div>
           <ul>
-            <li><a href="sql.html#top-n">Top N per group</a></li>
-            <li><a href="sql.html#dedupe">Removing duplicates</a></li>
-            <li><a href="sql.html#running-totals">Running totals and moving averages</a></li>
-            <li><a href="sql.html#period-over-period">Period over period</a></li>
-            <li><a href="sql.html#gaps-islands">Gaps and islands</a></li>
-            <li><a href="sql.html#merge">Upserts with Delta MERGE</a></li>
-            <li><a href="sql.html#scd2">Keeping history with MERGE</a></li>
-            <li><a href="sql.html#date-gaps">Filling date gaps</a></li>
+            <li>Built a customer overview application, a lightweight internal CRM that combines data from several source systems into one profile of each customer's full relationship with the bank.</li>
+            <li>Built data extracts and reports that support core banking system conversions during mergers and acquisitions.</li>
           </ul>
+          <p class="stack">Databricks · Spark SQL · Delta Lake · Power BI / DAX · Python</p>
         </div>
-        <div class="pattern-list">
-          <h3><a href="dax.html">DAX</a></h3>
-          <ul>
-            <li><a href="dax.html#ytd">Year to date vs prior year</a></li>
-            <li><a href="dax.html#running-total">Running totals</a></li>
-            <li><a href="dax.html#calculate">CALCULATE and filter context</a></li>
-            <li><a href="dax.html#segments">Dynamic segments</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="contact" id="contact">
-      <div>
-        <h2>Get in touch</h2>
-      </div>
-      <ul>
-        <li><a href="mailto:mattbrudisill@gmail.com">mattbrudisill@gmail.com</a></li>
-        <li><a href="https://www.linkedin.com/in/matthew-rudisill/">LinkedIn</a></li>
-        <li><a href="https://github.com/mattrudy13">GitHub</a></li>
-      </ul>
-    </section>
-  </main>
+      <section class="featured" id="featured">
+        <div class="featured-head">
+          <p class="label accent">Featured project · forecasting</p>
+          <h2>College football forecasting model</h2>
+          <p>I built a model that predicts college football scores, set the success criteria before testing it, and published the results, including the two versions that failed. The third version passed, and it is now being tracked live through the 2026 season.</p>
+          <p class="stack">Built with JavaScript (Node) · GitHub Actions · sports data and odds APIs</p>
+        </div>
+
+        <div class="featured-body">
+          <figure>
+            <figcaption>Each version against the betting market</figcaption>
+            <p class="chart-note">Share of picks correct against the opening line. Version 1 was tested on two seasons, versions 2 and 3 on four. Bars start at 48%; the dashed line is break-even.</p>
+            <!-- Bar heights: 20 px per percentage point above 48%, from a baseline at y=190. -->
+            <svg class="chart" viewBox="0 0 460 230" width="100%" role="img" aria-label="Bar chart: version 1 52.1 percent on 266 picks, version 2 52.8 percent on 863 picks, version 3 55.3 percent on 172 picks. Break-even is 52.4 percent.">
+              <line class="axis" x1="0" y1="190" x2="460" y2="190"></line>
+              <rect class="missed" x="40" y="108" width="90" height="82"></rect>
+              <rect class="missed" x="185" y="94" width="90" height="96"></rect>
+              <rect class="passed" x="330" y="44" width="90" height="146"></rect>
+              <line class="even" x1="0" y1="102" x2="460" y2="102"></line>
+              <text class="note" x="0" y="96">break-even 52.4%</text>
+              <text class="val" x="85" y="128" text-anchor="middle">52.1%</text>
+              <text class="val" x="230" y="128" text-anchor="middle">52.8%</text>
+              <text class="val" x="375" y="36" text-anchor="middle">55.3%</text>
+              <text class="name" x="85" y="210" text-anchor="middle">Version 1</text>
+              <text class="name" x="230" y="210" text-anchor="middle">Version 2</text>
+              <text class="name on" x="375" y="210" text-anchor="middle">Version 3</text>
+              <text class="sub" x="85" y="227" text-anchor="middle">266 picks · missed</text>
+              <text class="sub" x="230" y="227" text-anchor="middle">863 picks · missed</text>
+              <text class="sub" x="375" y="227" text-anchor="middle">172 picks · passed</text>
+            </svg>
+          </figure>
+          <div>
+            <ul class="facts">
+              <li><b>3</b><span>model versions, each tested against criteria set in advance</span></li>
+              <li><b>55.3%</b><span>correct for the version that passed (52.4% breaks even)</span></li>
+              <li><b>4</b><span>seasons of history, each predicted only from earlier seasons</span></li>
+            </ul>
+            <div class="links">
+              <a href="https://mattrudy13.github.io/cfb-picks/">View the site</a>
+              <a href="https://github.com/mattrudy13/cfb-picks">Code</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="projects" id="projects">
+        <h2 class="label rule-title">More projects</h2>
+        <div class="cards">
+          <article class="card">
+            <a class="shot" href="https://mattrudy13.github.io/apartments/"><img src="img/apartments.jpg" width="1000" height="750" loading="lazy" alt="Apartment tracker dashboard listing units under budget, cheapest first"></a>
+            <h3>Apartment price tracker</h3>
+            <p>A weekly scraper collects prices from nine apartment complexes, and a dashboard compares the true monthly cost, rent after specials plus required fees, against a budget.</p>
+            <p class="stack">Python · web scraping · GitHub Actions</p>
+            <div class="links">
+              <a href="https://mattrudy13.github.io/apartments/">View the site</a>
+              <a href="https://github.com/mattrudy13/apartments">Code</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <a class="shot" href="https://mattrudy13.github.io/te-tracker/"><img src="img/te-tracker.jpg" width="1000" height="750" loading="lazy" alt="NFL matchups page with each game's tight ends and kickoff details"></a>
+            <h3>NFL touchdown forecasts</h3>
+            <p>Estimates each tight end's chance to score from usage data and compares it with market prices, updated automatically through the season.</p>
+            <p class="stack">JavaScript (Node) · GitHub Actions · APIs</p>
+            <div class="links">
+              <a href="https://mattrudy13.github.io/te-tracker/">View the site</a>
+              <a href="https://github.com/mattrudy13/te-tracker">Code</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <a class="shot" href="https://mattrudy13.github.io/h2h/"><img src="img/h2h.jpg" width="1000" height="750" loading="lazy" alt="Michigan vs Ohio State all-time series: Michigan leads 62–53 with 6 ties"></a>
+            <h3>College head-to-head records</h3>
+            <p>Look up the all-time record between any two college teams in football or men's basketball, with every game in the series.</p>
+            <p class="stack">JavaScript · Cloudflare Workers · APIs</p>
+            <div class="links">
+              <a href="https://mattrudy13.github.io/h2h/">View the site</a>
+              <a href="https://github.com/mattrudy13/h2h">Code</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="contact" id="contact">
+        <h2>Contact</h2>
+        <div class="links">
+          <a href="mailto:mattbrudisill@gmail.com">mattbrudisill@gmail.com</a>
+          <a href="https://www.linkedin.com/in/matthew-rudisill/">LinkedIn</a>
+          <a href="https://github.com/mattrudy13">GitHub</a>
+        </div>
+      </section>
+    </main>
+  </div>
 </body>
 </html>

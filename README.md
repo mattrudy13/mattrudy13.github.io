@@ -1,13 +1,14 @@
 # mattrudy13.github.io
 
-Portfolio site for Matthew Rudisill: projects, plus worked Spark SQL and DAX patterns.
+Portfolio site for Matthew Rudisill, aimed at recruiters: skills, day job, and projects.
 Live at https://mattrudy13.github.io/
 
 Plain HTML and one stylesheet, no build step. GitHub Pages serves `main`.
 
-- `index.html`: intro, projects, links to the patterns, contact
-- `sql.html`, `dax.html`: patterns, each with made-up sample data and its exact result
-- `style.css`: shared styles (follows the system light/dark setting)
+- `index.html`: masthead (intro, skills, contact links), at work, featured project, more projects, contact
+- `style.css`: shared styles (light only)
+- `img/`: project screenshots, taken from the live sites with headless Chrome at 1280×960 and
+  saved as 1000×750 JPEGs
 
-The SQL results were produced by running each query on the sample data. Nothing here comes from
-employer code or data.
+The work section stays generic: no employer name and no internal app names. The featured chart's
+numbers come from `cfb-picks/data/backtest.json` (v1) and `backtest-v3.json` (v2 and v3).
