@@ -10,6 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Source+Sans+3:wght@400;600&display=swap">
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Apply a saved theme before the page paints, so a visitor who picked one doesn't see a flash of the other.
+    try { const t = localStorage.getItem("portfolio:theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+  </script>
 </head>
 <body>
   <div class="wrap">
@@ -27,6 +31,7 @@
           <a href="https://www.linkedin.com/in/matthew-rudisill/">LinkedIn</a>
           <a href="mailto:mattbrudisill@gmail.com">Email</a>
           <a href="https://github.com/mattrudy13">GitHub</a>
+          <button type="button" class="theme-btn" id="theme" hidden></button>
         </div>
       </nav>
     </header>
@@ -166,5 +171,28 @@
       </section>
     </main>
   </div>
+  <script>
+    // Theme toggle: follows the system until the visitor picks one, then remembers it in this browser.
+    (() => {
+      const root = document.documentElement;
+      const button = document.getElementById("theme");
+      const current = () => root.dataset.theme ?? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      const label = () => {
+        const dark = current() === "dark";
+        button.textContent = dark ? "☀" : "☾";
+        button.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+      };
+      button.addEventListener("click", () => {
+        const next = current() === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        try { localStorage.setItem("portfolio:theme", next); } catch {}
+        label();
+      });
+      // Keep the icon right if the system setting changes while no choice is saved.
+      matchMedia("(prefers-color-scheme: dark)").addEventListener("change", label);
+      label();
+      button.hidden = false;
+    })();
+  </script>
 </body>
 </html>
