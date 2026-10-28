@@ -13,7 +13,9 @@ Plain HTML and one stylesheet, no build step. GitHub Pages serves `main`.
   temporary stale-pull `.banner` could be hidden; the others with headless Chrome
   (`--blink-settings=preferredColorScheme=1`, or they come out dark when macOS is in dark mode).
   `uva-records.jpg` (dashboard) and `kotc-tracker.jpg` (Tonight, Oct 21, 2026) were added for v0.3 the
-  same way. nba-first-minute is left off on purpose, so the betting projects don't dominate the page.
+  same way. `kotc-tracker.jpg` was re-shot on Oct 27, 2026 after its v0.6 redesign, with Playwright: scrolled
+  to the "Main event" picks (the poster masthead alone fills the frame) with `#hero` and `#live-card` hidden
+  so the frame ends on a section heading. nba-first-minute is left off on purpose, so the betting projects don't dominate the page.
 
 The work section stays generic: no employer name and no internal app names. The featured chart's
 numbers come from `cfb-picks/data/backtest.json` (v1) and `backtest-v3.json` (v2 and v3). The reason
