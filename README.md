@@ -8,6 +8,10 @@ Plain HTML and one stylesheet, no build step. GitHub Pages serves `main`.
 - `index.html`: masthead (intro, skills, contact links), at work, featured project, more projects, contact
 - `style.css`: shared styles (light, plus a dark version that follows the system setting; the ☾/☀ button
   at the end of the top bar overrides it and is saved in the browser as `portfolio:theme`)
+- `Matthew-Rudisill-Resume.pdf`: the public resume, linked in the top bar and Contact. It's a web copy with
+  no phone or email (LinkedIn instead). The original Word export's PDF title was fixed in place to
+  "Matthew Rudisill Resume" so the browser tab reads cleanly. Other resume PDFs in this folder are
+  ignored by `.gitignore` so the copy with a phone number never gets committed.
 - `img/`: project screenshots of the live sites in light mode, taken at 840×630 (2× scale) and saved
   as 1000×750 JPEGs. The apartments shot was taken with Playwright (from the apartments venv) so the
   temporary stale-pull `.banner` could be hidden; the others with headless Chrome

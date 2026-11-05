@@ -141,6 +141,9 @@ figcaption { font-size: 15px; font-weight: 600; }
   h1 { font-size: 42px; }
   .lede { font-size: 18px; }
   .bar-nav { justify-content: center; }
+  /* Four contact links plus the toggle don't fit one phone row at full padding; center any wrap so it lines up under At work · Projects. */
+  .bar-nav div { justify-content: center; }
+  .bar-nav a, .theme-btn { padding-left: 7px; padding-right: 7px; }
   .bar-nav .sections a:first-child { padding-left: 14px; }
   .bar-nav .contact-links > :last-child { padding-right: 14px; }
   main { padding-top: 44px; gap: 64px; }
